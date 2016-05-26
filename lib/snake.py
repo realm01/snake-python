@@ -7,16 +7,16 @@ import time
 
 class Application(tk.Frame):
     def moveUp(self, event):
-        self.my_snake.blocks[0].direction = Vector2(0, -1)
+        self.my_snake.blocks[0].direction = [ Vector2(0, -1) ]
 
     def moveDown(self, event):
-        self.my_snake.blocks[0].direction = Vector2(0, 1)
+        self.my_snake.blocks[0].direction = [ Vector2(0, 1) ]
 
     def moveRight(self, event):
-        self.my_snake.blocks[0].direction = Vector2(1, 0)
+        self.my_snake.blocks[0].direction = [ Vector2(1, 0) ]
 
     def moveLeft(self, event):
-        self.my_snake.blocks[0].direction = Vector2(-1, 0)
+        self.my_snake.blocks[0].direction = [ Vector2(-1, 0) ]
 
     def __init__(self, master=None):
         self.w=400

@@ -7,7 +7,7 @@ class Base():
 
 class Movement():
     def __init__(self):
-        self.direction = Vector2(-1, 0)
+        self.direction = [ Vector2(-1, 0) ]
 
 class Mesh(Base):
     def __init__(self, scale=1, pos=Vector2(0, 0), mesh=[]):
@@ -51,15 +51,13 @@ class SnakeObj(Base):
         local_w = int(w / self.scale) - 1
         local_h = int(h / self.scale) - 1
 
-        last = 0
+        last = self.blocks[0]
 
         for block in self.blocks:
-            block.pos += block.direction
-
-            if(last != 0):
-                block.direction = last.direction
-
+            block.direction.insert(0, last.direction[len(last.direction) - 1])
             last = block
+
+            block.pos += block.direction.pop()
 
             if block.pos.x < 0:
                 block.pos.x = local_w
