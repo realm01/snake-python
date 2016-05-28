@@ -1,4 +1,5 @@
 from lib.vector import Vector2
+from random import randint
 
 class Base():
     def __init__(self, scale=1, pos=Vector2(0, 0)):
@@ -6,8 +7,23 @@ class Base():
         self.pos = pos
 
 class Movement():
+    UP         = Vector2(0, -1)
+    DOWN       = Vector2(0, 1)
+    LEFT       = Vector2(-1, 0)
+    RIGHT      = Vector2(1, 0)
+
     def __init__(self):
-        self.direction = [ Vector2(-1, 0) ]
+        self.direction = self.LEFT
+        self.last_direction = self.LEFT
+
+    def updateAllDir(self, vec):
+        self.direction = vec if Movement.getOpposite(vec) != self.direction else self.direction
+        self.last_direction = vec if Movement.getOpposite(vec) != self.direction else self.direction
+
+    @staticmethod
+    def getOpposite(vec):
+        return vec.vecxScalar(-1)
+
 
 class Mesh(Base):
     def __init__(self, scale=1, pos=Vector2(0, 0), mesh=[]):
@@ -24,7 +40,6 @@ class Mesh(Base):
             else:
                 tmp_mesh[i] = tmp_mesh[i] * self.scale + self.pos.y * self.scale + modifier.y * self.scale
                 x = True
-        print(tmp_mesh)
         canvas.create_polygon(tmp_mesh, outline="green")
 
 
@@ -32,6 +47,18 @@ class Block(Mesh, Movement):
     def __init__(self, scale=1, pos=Vector2(0, 0)):
         Mesh.__init__(self, scale, pos, [0, 0,  0, 1,  1, 1,  1, 0])
         Movement.__init__(self)
+
+class Food(Block):
+    def __init__(self, w, h, scale=1):
+        Block.__init__(self, scale, Vector2(0, 0))
+        self.w = w
+        self.h = h
+        self.randomize()
+
+    def randomize(self):
+        local_w = int(self.w / self.scale) - 1
+        local_h = int(self.h / self.scale) - 1
+        self.pos = Vector2(randint(0, local_w), randint(0, local_h))
 
 class SnakeObj(Base):
     def __init__(self, scale=1, pos=Vector2(0, 0)):
@@ -41,6 +68,12 @@ class SnakeObj(Base):
     def addBlocks(self, count):
         for i in range(count):
             pos_last = self.blocks[len(self.blocks) - 1].pos if len(self.blocks) - 1 != -1 else Vector2(-1, 0)
+            # dir_last = self.blocks[len(self.blocks) - 1].last_direction if len(self.blocks) - 1 != -1 else Vector2(1, 0)
+            # print(dir_last.x)
+            # print(dir_last.y)
+            # self.blocks.append(Block(self.scale, Vector2(pos_last.x - dir_last.x, pos_last.y - dir_last.y)))
+            # self.blocks[len(self.blocks) - 1].updateAllDir(dir_last)
+
             self.blocks.append(Block(self.scale, Vector2(pos_last.x + 1, pos_last.y)))
 
     def render(self, canvas):
@@ -54,10 +87,11 @@ class SnakeObj(Base):
         last = self.blocks[0]
 
         for block in self.blocks:
-            block.direction.insert(0, last.direction[len(last.direction) - 1])
-            last = block
+            block.direction = block.last_direction
+            block.pos += block.direction
+            block.last_direction = last.direction
 
-            block.pos += block.direction.pop()
+            last = block
 
             if block.pos.x < 0:
                 block.pos.x = local_w
