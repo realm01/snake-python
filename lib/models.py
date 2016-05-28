@@ -67,14 +67,10 @@ class SnakeObj(Base):
 
     def addBlocks(self, count):
         for i in range(count):
-            pos_last = self.blocks[len(self.blocks) - 1].pos if len(self.blocks) - 1 != -1 else Vector2(-1, 0)
-            # dir_last = self.blocks[len(self.blocks) - 1].last_direction if len(self.blocks) - 1 != -1 else Vector2(1, 0)
-            # print(dir_last.x)
-            # print(dir_last.y)
-            # self.blocks.append(Block(self.scale, Vector2(pos_last.x - dir_last.x, pos_last.y - dir_last.y)))
-            # self.blocks[len(self.blocks) - 1].updateAllDir(dir_last)
+            last_block = self.blocks[len(self.blocks) - 1] if len(self.blocks) - 1 != -1 else Block(1, Vector2(-1, 0))
 
-            self.blocks.append(Block(self.scale, Vector2(pos_last.x + 1, pos_last.y)))
+            self.blocks.append(Block(self.scale, Vector2(last_block.pos.x - last_block.direction.x, last_block.pos.y - last_block.direction.y)))
+            self.blocks[len(self.blocks) - 1].last_direction = last_block.direction
 
     def render(self, canvas):
         for block in self.blocks:

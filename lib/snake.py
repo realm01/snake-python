@@ -46,8 +46,6 @@ class Application(tk.Frame):
 
         for block in self.my_snake.blocks:
             if(self.my_snake.blocks[0].pos == block.pos and self.my_snake.blocks[0] is not block):
-                print(b.pos)
-                print(block.pos)
                 self.restart()
 
     def renderAll(self):
