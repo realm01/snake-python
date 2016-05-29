@@ -76,6 +76,9 @@ class SnakeObj(Base):
         for block in self.blocks:
             block.render(canvas, self.pos)
 
+    def getScore(self):
+        return len(self.blocks) - 3
+
     def move(self, w, h):
         local_w = int(w / self.scale) - 1
         local_h = int(h / self.scale) - 1
