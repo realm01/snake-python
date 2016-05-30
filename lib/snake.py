@@ -65,7 +65,7 @@ class Application(tk.Frame):
         if(self.my_snake.blocks[0].pos == self.food.pos):
             self.speed *= 0.96
             self.my_snake.addBlocks(1)
-            self.food.randomize()
+            self.food.randomize(self.my_snake.blocks)
 
         for block in self.my_snake.blocks:
             if(self.my_snake.blocks[0].pos == block.pos and self.my_snake.blocks[0] is not block):
@@ -87,7 +87,7 @@ class Application(tk.Frame):
             self.moveAll()
             self.calcCollision()
             self.renderAll()
-            waittime = 200
+            waittime = 400
             for i in range(waittime):
                 time.sleep(self.speed / waittime)
                 self.master.update_idletasks()

@@ -56,10 +56,27 @@ class Food(Block):
         self.h = h
         self.randomize()
 
-    def randomize(self):
+    def randomize(self, exclude = []):
         local_w = int(self.w / self.scale) - 1
         local_h = int(self.h / self.scale) - 1
-        self.pos = Vector2(randint(0, local_w), randint(0, local_h))
+
+        new_x = randint(0, local_w)
+        new_y = randint(0, local_h)
+
+        while(True):
+            is_new = True
+
+            for base in exclude:
+                if Vector2(new_x, new_y) == base.pos:
+                    is_new = False
+                    new_x = randint(0, local_w)
+                    new_y = randint(0, local_h)
+
+            if is_new:
+                break
+
+
+        self.pos = Vector2(new_x, new_y)
 
 class SnakeObj(Base):
     def __init__(self, scale=1, pos=Vector2(0, 0), color="green"):
